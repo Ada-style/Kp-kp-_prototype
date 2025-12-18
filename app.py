@@ -7,7 +7,7 @@ sys.path.append(str(Path(__file__).parent))
 
 from data.series import Serie
 from data.Metier import Metier
-from data.chatbot_responses import chatbot_responses.py
+from data.chatbot_responses import chatbot_responses
 from utils.scoring import calculer_recommandations
 from utils.ikigai import calculer_score_ikigai
 
@@ -327,6 +327,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
