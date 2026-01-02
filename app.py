@@ -9,7 +9,7 @@ from data.series import SERIES_DATA
 from data.Metier import METIERS_DATA
 from data.chatbot_reponses import CHATBOT_RESPONSES
 from utils.scoring import calculer_recommandations
-from utils.ikigai import calculer_score_ikigai
+from utils.Ikigai import calculer_score_ikigai
 
 # Configuration de la page
 st.set_page_config(
@@ -327,6 +327,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
