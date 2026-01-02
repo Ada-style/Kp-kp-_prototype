@@ -454,8 +454,8 @@ Pour contribuer au projet :
 ## 📞 Contact
 
 Pour toute question ou suggestion sur **Kpékpé**, contacte l'équipe via :
-- Email : [votre email]
-- Téléphone : [votre téléphone]
+- Email : adadossi24@gmail.com
+- Téléphone : 71162394
 
 ---
 
@@ -470,5 +470,6 @@ Ce projet est développé dans le cadre de l'initiative **Kpékpé** pour l'orie
 ## 🙏 Remerciements
 
 Merci à tous ceux qui contribuent à améliorer l'orientation des jeunes togolais !
+
 
 **Ensemble, construisons l'avenir du Togo ! 🇹🇬🚀**
