@@ -86,11 +86,11 @@ def page_accueil():
     st.markdown('<div class="main-header"><h1>🎓 Kpékpé</h1><h3>Trouve ta voie, construis ton avenir !</h3></div>', unsafe_allow_html=True)
     
     st.markdown("""
-    ### 👋 Bienvenue !
+    ###  Bienvenue !
     
     **Kpékpé** t'aide à choisir la bonne orientation scolaire ou professionnelle grâce à un quiz personnalisé basé sur tes passions, tes talents et tes aspirations.
     
-    ✨ **Ce que nous allons découvrir ensemble :**
+     **Ce que nous allons découvrir ensemble :**
     - 💚 Ce que tu **AIMES** faire
     - 🌟 Ce dans quoi tu es **DOUÉ(E)**
     - 🌍 L'**IMPACT** que tu veux avoir
@@ -327,6 +327,7 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
 
 
