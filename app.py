@@ -11,7 +11,7 @@ from data.chatbot_responses import CHATBOT_RESPONSES
 from data.universites import UNIVERSITES_PUBLIQUES, UNIVERSITES_PRIVEES_PRINCIPALES, trouver_ecoles_par_domaine
 from data.debouches_secteurs import DEBOUCHES_PAR_SECTEUR, obtenir_metiers_forte_demande
 from utils.scoring import calculer_recommandations_texte_libre
-from utils.ikigai import calculer_score_ikigai
+from utils.Ikigai import calculer_score_ikigai
 
 # Configuration de la page
 st.set_page_config(
@@ -506,3 +506,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
