@@ -5,7 +5,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
 
 from data.series import SERIES_DATA
-from data.Metier import METIERS_DATA
+from data.metiers import METIERS_DATA
 from data.chatbot_responses import CHATBOT_RESPONSES
 from data.universites import UNIVERSITES_PUBLIQUES, UNIVERSITES_PRIVEES_PRINCIPALES, trouver_ecoles_par_domaine
 from data.debouches_secteurs import DEBOUCHES_PAR_SECTEUR
@@ -223,7 +223,7 @@ def page_accueil():
     </div>
     ''', unsafe_allow_html=True)
     
-    st.markdown('''
+    st.markdown("""
     <div class="welcome-section">
         <h2 style="color: #004B87; text-align: center; margin-bottom: 1.5rem;">Bienvenue</h2>
         
@@ -251,7 +251,7 @@ def page_accueil():
             <p>Définis ce qui compte pour ton avenir.</p>
         </div>
     </div>
-    ''', unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
     
     st.markdown('<p class="section-header">Commençons par te connaître</p>', unsafe_allow_html=True)
     
