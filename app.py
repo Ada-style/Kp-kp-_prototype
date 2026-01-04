@@ -197,14 +197,9 @@ if 'recommendations' not in st.session_state:
     st.session_state.recommendations = []
 
 def check_password():
-    st.markdown('''
-    <div class="main-header">
-        <h1>KPÉKPÉ</h1>
-        <p class="slogan">Light on your way</p>
-    </div>
-    ''', unsafe_allow_html=True)
+    st.markdown("<div class='main-header'><h1>KPÉKPÉ</h1><p class='slogan'>Light on your way</p></div>", unsafe_allow_html=True)
     
-    st.markdown('<div class="info-box">Cette application est en phase de test. Merci d\'entrer le code d\'accès.</div>', unsafe_allow_html=True)
+    st.info("Cette application est en phase de test. Merci d'entrer le code d'accès.")
     
     password = st.text_input("Code d'accès", type="password")
     
@@ -216,44 +211,21 @@ def check_password():
             st.error("Code incorrect. Contacte l'équipe Kpékpé.")
 
 def page_accueil():
-    st.markdown('''
-    <div class="main-header">
-        <h1>KPÉKPÉ</h1>
-        <p class="slogan">Light on your way</p>
-    </div>
-    ''', unsafe_allow_html=True)
+    # Header sans HTML problématique
+    st.markdown("<div class='main-header'><h1>KPÉKPÉ</h1><p class='slogan'>Light on your way</p></div>", unsafe_allow_html=True)
     
-    st.markdown("""
-    <div class="welcome-section">
-        <h2 style="color: #004B87; text-align: center; margin-bottom: 1.5rem;">Bienvenue</h2>
+    # Contenu avec st.container au lieu de HTML
+    with st.container():
+        st.markdown("## Bienvenue")
+        st.write("Kpékpé t'accompagne dans ta réflexion sur ton orientation scolaire ou professionnelle.")
         
-        <p style="font-size: 1.1rem; text-align: center; color: #2d3748; margin-bottom: 2rem;">
-        Kpékpé t'accompagne dans ta réflexion sur ton orientation scolaire ou professionnelle.
-        </p>
-        
-        <div class="feature-box">
-            <h4 style="color: #FF6B35;">Ce qui te passionne vraiment</h4>
-            <p>Découvre ce qui fait vibrer ton cœur.</p>
-        </div>
-        
-        <div class="feature-box">
-            <h4 style="color: #FF6B35;">Tes talents naturels</h4>
-            <p>Identifie les forces que tu possèdes déjà.</p>
-        </div>
-        
-        <div class="feature-box">
-            <h4 style="color: #FF6B35;">L'impact que tu veux avoir</h4>
-            <p>Réfléchis au changement que tu souhaites apporter.</p>
-        </div>
-        
-        <div class="feature-box">
-            <h4 style="color: #FF6B35;">Tes priorités professionnelles</h4>
-            <p>Définis ce qui compte pour ton avenir.</p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.info("**Ce qui te passionne vraiment** - Découvre ce qui fait vibrer ton cœur.")
+        st.info("**Tes talents naturels** - Identifie les forces que tu possèdes déjà.")
+        st.info("**L'impact que tu veux avoir** - Réfléchis au changement que tu souhaites apporter.")
+        st.info("**Tes priorités professionnelles** - Définis ce qui compte pour ton avenir.")
     
-    st.markdown('<p class="section-header">Commençons par te connaître</p>', unsafe_allow_html=True)
+    st.markdown("---")
+    st.subheader("Commençons par te connaître")
     
     col1, col2 = st.columns(2)
     
@@ -270,34 +242,17 @@ def page_accueil():
             st.rerun()
 
 def page_quiz():
-    st.markdown('''
-    <div class="main-header">
-        <h1>Questionnaire d'orientation</h1>
-        <p class="slogan">Light on your way</p>
-    </div>
-    ''', unsafe_allow_html=True)
+    st.markdown("<div class='main-header'><h1>Questionnaire d'orientation</h1><p class='slogan'>Light on your way</p></div>", unsafe_allow_html=True)
     
     profil = st.session_state.profil
     profil_text = "Collégien (3ème)" if profil == "collegien" else "Lycéen/Bachelier"
     
-    st.markdown(f'<div class="info-box">Profil sélectionné : <strong>{profil_text}</strong></div>', unsafe_allow_html=True)
+    st.info(f"Profil sélectionné : **{profil_text}**")
+    st.write("Prends ton temps pour répondre. Il n'y a pas de bonne ou mauvaise réponse.")
     
-    st.markdown("""
-    <div class="welcome-section">
-    <p style="text-align: center;">
-    Prends ton temps pour répondre. Il n'y a pas de bonne ou mauvaise réponse. 
-    L'important est d'être sincère avec toi-même.
-    </p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.subheader("Ce qui te passionne")
     
-    st.markdown('<p class="section-header">Ce qui te passionne</p>', unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="question-context">
-    Pense à ces moments où tu es vraiment absorbé par ce que tu fais, où le temps passe sans que tu t'en rendes compte.
-    </div>
-    """, unsafe_allow_html=True)
+    st.write("Pense à ces moments où tu es vraiment absorbé par ce que tu fais.")
     
     passion_principale = st.text_area(
         "Décris en quelques phrases ce que tu aimes vraiment faire",
@@ -305,9 +260,9 @@ def page_quiz():
         placeholder="Exemple : J'adore comprendre comment les choses fonctionnent...",
         key="passion_principale"
     )
-    st.markdown('<p class="helper-text">Sois aussi précis que possible.</p>', unsafe_allow_html=True)
+    st.caption("Sois aussi précis que possible.")
     
-    st.markdown("**Pour t'aider, coche ce qui résonne avec toi :**")
+    st.write("**Pour t'aider, coche ce qui résonne avec toi :**")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -326,13 +281,9 @@ def page_quiz():
             key="activites_favorites"
         )
     
-    st.markdown('<p class="section-header">Tes forces naturelles</p>', unsafe_allow_html=True)
+    st.subheader("Tes forces naturelles")
     
-    st.markdown("""
-    <div class="question-context">
-    On a tous des choses qu'on fait plus facilement que d'autres. Qu'est-ce que les gens remarquent chez toi ?
-    </div>
-    """, unsafe_allow_html=True)
+    st.write("On a tous des choses qu'on fait plus facilement que d'autres. Qu'est-ce que les gens remarquent chez toi ?")
     
     forces_naturelles = st.text_area(
         "Décris les choses pour lesquelles tu es doué",
@@ -340,7 +291,7 @@ def page_quiz():
         placeholder="Exemple : Mes amis viennent me voir quand ils ont un problème...",
         key="forces_naturelles"
     )
-    st.markdown('<p class="helper-text">Sois honnête avec tes forces.</p>', unsafe_allow_html=True)
+    st.caption("Sois honnête avec tes forces.")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -358,13 +309,9 @@ def page_quiz():
             key="talents"
         )
     
-    st.markdown('<p class="section-header">L\'impact que tu veux avoir</p>', unsafe_allow_html=True)
+    st.subheader("L'impact que tu veux avoir")
     
-    st.markdown("""
-    <div class="question-context">
-    Si tu pouvais améliorer quelque chose, ce serait quoi ?
-    </div>
-    """, unsafe_allow_html=True)
+    st.write("Si tu pouvais améliorer quelque chose, ce serait quoi ?")
     
     impact_souhaite = st.text_area(
         "Décris le changement que tu aimerais créer",
@@ -381,7 +328,7 @@ def page_quiz():
         key="probleme"
     )
     
-    st.markdown('<p class="section-header">Tes priorités</p>', unsafe_allow_html=True)
+    st.subheader("Tes priorités")
     
     priorites_personnelles = st.text_area(
         "Ce qui compte pour ton futur professionnel",
@@ -438,12 +385,7 @@ def page_quiz():
                 st.warning("Merci de répondre aux trois questions principales en texte libre.")
 
 def page_resultats():
-    st.markdown('''
-    <div class="main-header">
-        <h1>Tes résultats</h1>
-        <p class="slogan">Light on your way</p>
-    </div>
-    ''', unsafe_allow_html=True)
+    st.markdown("<div class='main-header'><h1>Tes résultats</h1><p class='slogan'>Light on your way</p></div>", unsafe_allow_html=True)
     
     profil = st.session_state.profil
     responses = st.session_state.responses
@@ -457,21 +399,13 @@ def page_resultats():
     
     st.session_state.recommendations = recommandations
     
-    st.markdown(f'<p class="section-header">{titre}</p>', unsafe_allow_html=True)
+    st.subheader(titre)
     
-    st.markdown("""
-    <div class="info-box">
-    Ces recommandations sont basées sur ton profil. Ce sont des pistes pour t'aider à réfléchir.
-    </div>
-    """, unsafe_allow_html=True)
+    st.info("Ces recommandations sont basées sur ton profil. Ce sont des pistes pour t'aider à réfléchir.")
     
     for i, rec in enumerate(recommandations[:3], 1):
-        st.markdown(f"""
-        <div class="result-card">
-            <h3>{i}. {rec['nom']}</h3>
-            <span class="result-score">Correspondance : {rec['score']}%</span>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"### {i}. {rec['nom']}")
+        st.success(f"Correspondance : {rec['score']}%")
         
         col1, col2 = st.columns(2)
         
@@ -516,19 +450,9 @@ def page_resultats():
                 
                 if ecoles_trouvees:
                     for ecole in ecoles_trouvees:
-                        st.markdown(f"""
-                        <div class="university-box">
-                        <strong>{ecole['nom']}</strong><br>
-                        Type: {ecole['type']} | Coût: {ecole['cout']}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        st.success(f"**{ecole['nom']}** - {ecole['type']} | {ecole['cout']}")
                 else:
-                    st.markdown("""
-                    <div class="university-box">
-                    <strong>Université de Lomé</strong><br>
-                    Type: Public | Coût: 50 000-100 000 FCFA/an
-                    </div>
-                    """, unsafe_allow_html=True)
+                    st.success("**Université de Lomé** - Public | 50 000-100 000 FCFA/an")
         
         st.markdown("---")
     
@@ -542,21 +466,21 @@ def page_resultats():
     afficher_chatbot()
 
 def afficher_chatbot():
-    st.markdown('<p class="section-header">Des questions ?</p>', unsafe_allow_html=True)
+    st.subheader("Des questions ?")
     
-    st.markdown('<div class="chatbot-container">', unsafe_allow_html=True)
+    st.write("Tu peux poser tes questions ici.")
     
     # Questions contextuelles selon les recommandations
     if st.session_state.recommendations:
-        st.markdown("**Questions sur tes recommandations :**")
+        st.write("**Questions sur tes recommandations :**")
         
         for rec in st.session_state.recommendations[:3]:
             nom = rec['nom']
             if st.button(f"Quelles universités pour {nom} ?", key=f"univ_{nom}"):
-                st.info(f"Pour {nom}, je te recommande de consulter les établissements affichés ci-dessus. Si tu veux plus de détails, sélectionne une question générale en dessous.")
+                st.info(f"Pour {nom}, consulte les établissements affichés ci-dessus.")
     
     st.markdown("---")
-    st.markdown("**Questions générales :**")
+    st.write("**Questions générales :**")
     
     questions_frequentes = list(CHATBOT_RESPONSES.keys())
     
@@ -585,9 +509,8 @@ def afficher_chatbot():
             reponse = CHATBOT_RESPONSES.get(question)
         
         if reponse:
-            st.markdown(f'<div class="info-box"><strong>Réponse :</strong><br>{reponse}</div>', unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+            st.info(f"**Réponse :** {reponse}")
+
 
 def main():
     if not st.session_state.authenticated:
@@ -602,4 +525,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
