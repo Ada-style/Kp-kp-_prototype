@@ -173,8 +173,18 @@ function handleUserResponse(text) {
 
     // 1. ONBOARDING
     if (STATE.screen === 'onboarding_name') {
-        // Smart name extraction: ignore common phrases
-        let name = text.replace(/^(je m'appelle|je suis|mon nom est|je me nomme|m'appelle)\s+/i, '').trim();
+        // Smart name extraction: ignore common phrases and take last capital word if it's a phrase
+        let name = text.replace(/^(je m'appelle|je suis|mon nom est|je me nomme|m'appelle|salut|bonjour)\s+/i, '').trim();
+
+        // If it's still a sentence (more than 2 words), try to pick the most likely name
+        const words = name.split(/\s+/);
+        if (words.length > 2) {
+            // Take the last word as the name if it's capitalized, or just the last word
+            name = words[words.length - 1];
+        } else if (words.length === 2) {
+            // Likely "First Last", keep it
+        }
+
         // Capitalize first letter
         name = name.charAt(0).toUpperCase() + name.slice(1);
 
@@ -357,7 +367,13 @@ function calculateProfile() {
     STATE.screen = 'chat_intro';
     botReply(`Ton profil est : <strong>${profileData.label}</strong> 🎯<br>${profileData.desc}<br>Génial ! On va utiliser ça pour te guider.`, 1500);
     setTimeout(() => {
-        botReply(`Maintenant, passons aux choses sérieuses. ${CHAT_QUESTIONS[0]}`, 2000);
+        botReply(`Maintenant, passons aux choses sérieuses. ${CHAT_QUESTIONS[0]}`, 2000, [
+            { text: "Français/Langues", value: "Langues" },
+            { text: "Maths/Sciences", value: "Sciences" },
+            { text: "Gestion/Compta", value: "Gestion" },
+            { text: "Histoire/Géo", value: "SHS" },
+            { text: "Arts/Dessin", value: "Arts" }
+        ]);
     }, 2000);
 }
 
