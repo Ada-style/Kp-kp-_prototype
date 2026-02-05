@@ -57,7 +57,9 @@ body {
     color: var(--color-text-main);
     background-color: var(--color-bg-chat);
     line-height: 1.6;
-    height: 100dvh;
+    height: 100vh;
+    /* Fallback */
+    height: var(--vh, 100dvh);
     /* Dynamic viewport height */
     display: flex;
     flex-direction: column;

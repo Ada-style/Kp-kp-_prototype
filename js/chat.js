@@ -57,6 +57,17 @@ const elements = {
 
 // --- INITIALIZATION ---
 function initApp() {
+    // Mobile Viewport Fix
+    if (window.visualViewport) {
+        const updateHeight = () => {
+            const vh = window.visualViewport.height;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+        window.visualViewport.addEventListener('resize', updateHeight);
+        window.visualViewport.addEventListener('scroll', updateHeight);
+        updateHeight();
+    }
+
     // Start with Onboarding
     addMessage("bot", "Salut ! Je suis Kpékpé, ton guide personnel. 👋<br>Je suis là pour t'aider à trouver ta voie au Togo. Pour commencer, comment t'appelles-tu ?");
     STATE.screen = 'onboarding_name';
