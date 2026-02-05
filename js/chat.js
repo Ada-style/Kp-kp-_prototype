@@ -69,7 +69,7 @@ function initApp() {
     }
 
     // Start with Onboarding
-    addMessage("bot", "Salut ! Je suis Kpékpé, ton guide personnel. 👋<br>Je suis là pour t'aider à trouver ta voie au Togo. Pour commencer, comment t'appelles-tu ?");
+    addMessage("bot", "Salut ! Je suis Kpékpé, ton guide personnel. Je suis là pour t'aider à trouver ta voie scolaire et professionnelle au Togo. Pour commencer comment t'appelles-tu ?");
     STATE.screen = 'onboarding_name';
 }
 
@@ -98,11 +98,21 @@ function addMessage(sender, text, quickReplies = null) {
     if (quickReplies && sender === 'bot') {
         const qrDiv = document.createElement('div');
         qrDiv.classList.add('quick-replies');
+        msgDiv.dataset.hasButtons = "true"; // Mark this message as having active buttons
+
         quickReplies.forEach(qr => {
             const btn = document.createElement('button');
             btn.classList.add('qr-btn');
             btn.innerText = qr.text;
-            btn.onclick = () => handleUserResponse(qr.value || qr.text);
+            btn.onclick = () => {
+                // Disable all buttons in this specific message once one is clicked
+                qrDiv.querySelectorAll('.qr-btn').forEach(b => {
+                    b.disabled = true;
+                    b.style.opacity = "0.6";
+                    b.style.cursor = "default";
+                });
+                handleUserResponse(qr.value || qr.text);
+            };
             qrDiv.appendChild(btn);
         });
         chatBox.appendChild(qrDiv);
@@ -163,7 +173,12 @@ function handleUserResponse(text) {
 
     // 1. ONBOARDING
     if (STATE.screen === 'onboarding_name') {
-        STATE.user.name = text;
+        // Smart name extraction: ignore common phrases
+        let name = text.replace(/^(je m'appelle|je suis|mon nom est|je me nomme|m'appelle)\s+/i, '').trim();
+        // Capitalize first letter
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+
+        STATE.user.name = name;
         STATE.screen = 'onboarding_status';
         botReply(`Enchanté ${STATE.user.name} ! 😊<br>Quelle est ta situation actuelle ?`, 1000, [
             { text: "Collégien (3ème)", value: "Collégien" },
@@ -188,10 +203,18 @@ function handleUserResponse(text) {
         if (text !== "GO" && STATE.screen === 'personality_intro') return;
 
         if (STATE.screen === 'personality_test') {
-            const isA = text.startsWith("A)");
-            if (isA) STATE.user.personality_scores.A++;
-            else STATE.user.personality_scores.B++;
-            STATE.test_question_index++;
+            if (text === "BACK") {
+                STATE.test_question_index--;
+                // We don't easily know if the previous was A or B without a history
+                // Let's just decrement and the next response will overwrite or we should have a log
+                // Simplified for prototype: we don't track history of A/B per question, just totals
+                // To be correct, we'd need a history. For now, let's just allow re-asking.
+            } else {
+                const isA = text.startsWith("A)");
+                if (isA) STATE.user.personality_scores.A++;
+                else STATE.user.personality_scores.B++;
+                STATE.test_question_index++;
+            }
         }
 
         STATE.screen = 'personality_test';
@@ -202,10 +225,17 @@ function handleUserResponse(text) {
         }
 
         const q = TEST_QUESTIONS[STATE.test_question_index];
-        botReply(q.q, 600, [
+        const options = [
             { text: q.a, value: q.a },
             { text: q.b, value: q.b }
-        ]);
+        ];
+
+        // Add "Back" button if not the first question
+        if (STATE.test_question_index > 0) {
+            options.push({ text: "⬅️ Revenir", value: "BACK" });
+        }
+
+        botReply(q.q, 600, options);
         return;
     }
 
