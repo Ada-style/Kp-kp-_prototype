@@ -367,13 +367,7 @@ function calculateProfile() {
     STATE.screen = 'chat_intro';
     botReply(`Ton profil est : <strong>${profileData.label}</strong> 🎯<br>${profileData.desc}<br>Génial ! On va utiliser ça pour te guider.`, 1500);
     setTimeout(() => {
-        botReply(`Maintenant, passons aux choses sérieuses. ${CHAT_QUESTIONS[0]}`, 2000, [
-            { text: "Français/Langues", value: "Langues" },
-            { text: "Maths/Sciences", value: "Sciences" },
-            { text: "Gestion/Compta", value: "Gestion" },
-            { text: "Histoire/Géo", value: "SHS" },
-            { text: "Arts/Dessin", value: "Arts" }
-        ]);
+        botReply(`Maintenant, passons aux choses sérieuses. ${CHAT_QUESTIONS[0]}`, 2000);
     }, 2000);
 }
 
