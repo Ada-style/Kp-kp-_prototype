@@ -204,15 +204,10 @@ function handleUserResponse(text) {
 
     // 3. CHAT LOOP
     if (STATE.screen === 'chat_intro' || STATE.screen === 'chat_loop') {
-        // If we were in intro, we are now in the loop (processing answer to first question)
         STATE.screen = 'chat_loop';
-
-        // Collect data from the answer
         STATE.user.answers_log.push(text);
         const newTags = extractKeywords(text);
         STATE.user.extracted_tags = [...STATE.user.extracted_tags, ...newTags];
-
-        // Increment to next question
         STATE.chat_turn++;
 
         if (STATE.chat_turn >= CHAT_QUESTIONS.length) {
@@ -224,6 +219,59 @@ function handleUserResponse(text) {
         }
         return;
     }
+
+    // 4. RESULTS ACTIONS
+    if (STATE.screen === 'results') {
+        if (text === 'RESTART') {
+            restartApp();
+        } else if (text === 'MORE' || text === 'PDF') {
+            triggerSurvey();
+        }
+        return;
+    }
+}
+
+function restartApp() {
+    // Reset State
+    STATE.screen = 'onboarding_name';
+    STATE.user = {
+        name: '',
+        age: '',
+        status: '',
+        personality_scores: { A: 0, B: 0 },
+        personality_type: null,
+        answers_log: [],
+        extracted_tags: []
+    };
+    STATE.test_question_index = 0;
+    STATE.chat_turn = 0;
+
+    // Clear UI
+    const chatBox = document.getElementById('chat-box');
+    chatBox.innerHTML = '';
+
+    // Add typing indicator back (it was cleared)
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typing-indicator';
+    typingDiv.classList.add('message', 'bot-message');
+    typingDiv.style.display = 'none';
+    typingDiv.innerHTML = `
+        <div class="message-avatar"><i class="fa-solid fa-lightbulb"></i></div>
+        <div class="typing-buble">
+            <span></span><span></span><span></span>
+        </div>
+    `;
+    chatBox.appendChild(typingDiv);
+
+    // Re-init
+    initApp();
+}
+
+function triggerSurvey() {
+    botReply("Kpékpé sera bientôt disponible sur mobile grâce à ton avis. Peux-tu nous donner ton avis pour nous aider à nous améliorer ? 💡", 800, [
+        { text: "Donner mon avis", value: "https://ada-style.github.io/kpekpe_live/#contact" },
+        { text: "Plus tard", value: "RESTART" }
+    ]);
 }
 
 // --- LOGIC FUNCTIONS ---
@@ -401,10 +449,7 @@ function showRecommendations() {
     ]);
 }
 
-// SURVEY LOGIC (Placeholder)
-function triggerSurvey() {
-    // Implementation for survey flow
-}
+
 
 // Start
 window.onload = initApp;
