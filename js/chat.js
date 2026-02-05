@@ -98,7 +98,12 @@ function addMessage(sender, text, quickReplies = null) {
     }
 
     // Scroll to bottom
-    chatBox.scrollTop = chatBox.scrollHeight;
+    setTimeout(() => {
+        chatBox.scrollTo({
+            top: chatBox.scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 50);
 }
 
 function showTyping() {
@@ -113,7 +118,8 @@ function hideTyping() {
 
 async function botReply(text, delay = 1000, quickReplies = null) {
     showTyping();
-    await new Promise(r => setTimeout(r, delay));
+    // Minimum 800ms to feel natural, otherwise use requested delay
+    await new Promise(r => setTimeout(r, Math.max(800, delay)));
     hideTyping();
     addMessage('bot', text, quickReplies);
 }
@@ -134,6 +140,7 @@ document.getElementById('user-input').addEventListener('keypress', (e) => {
 
 // --- MAIN CONTROLLER ---
 function handleUserResponse(text) {
+    if (!text) return;
     addMessage('user', text);
 
     // 1. ONBOARDING
@@ -151,26 +158,8 @@ function handleUserResponse(text) {
 
     if (STATE.screen === 'onboarding_status') {
         STATE.user.status = text;
-        if (text === "Lycéen") {
-            STATE.screen = 'onboarding_series';
-            let options = [];
-            Object.values(SERIES_DATA).forEach(family => {
-                family.forEach(s => options.push({ text: s.code, value: s.code }));
-            });
-            botReply("Super ! Quelle est ta série actuelle (ou celle que tu envisages) ?", 1000, options);
-        } else {
-            STATE.screen = 'personality_intro';
-            botReply(`Ça marche. Avant de discuter de tes rêves, faisons un petit test rapide pour cerner ta personnalité (15 questions).<br>C'est parti ? 🚀`, 1200, [
-                { text: "C'est parti !", value: "GO" }
-            ]);
-        }
-        return;
-    }
-
-    if (STATE.screen === 'onboarding_series') {
-        STATE.user.series = text;
         STATE.screen = 'personality_intro';
-        botReply(`Noté pour la série ${text}.<br>Passons maintenant au test de personnalité ! C'est parti ? 🚀`, 1000, [
+        botReply(`Ça marche. Avant de discuter de tes rêves, faisons un petit test rapide pour cerner ta personnalité (15 questions).<br>C'est parti ? 🚀`, 1200, [
             { text: "C'est parti !", value: "GO" }
         ]);
         return;
@@ -178,9 +167,8 @@ function handleUserResponse(text) {
 
     // 2. PERSONALITY TEST
     if (STATE.screen === 'personality_intro' || STATE.screen === 'personality_test') {
-        if (text !== "GO" && STATE.screen === 'personality_intro') return; // Wait for GO
+        if (text !== "GO" && STATE.screen === 'personality_intro') return;
 
-        // Save previous answer if inside loop
         if (STATE.screen === 'personality_test') {
             const isA = text.startsWith("A)");
             if (isA) STATE.user.personality_scores.A++;
@@ -190,7 +178,6 @@ function handleUserResponse(text) {
 
         STATE.screen = 'personality_test';
 
-        // Check if finished
         if (STATE.test_question_index >= TEST_QUESTIONS.length) {
             calculateProfile();
             return;
@@ -205,53 +192,29 @@ function handleUserResponse(text) {
     }
 
     // 3. CHAT LOOP
-    // 3. CHAT LOOP
-    if (STATE.screen === 'chat_intro') {
+    if (STATE.screen === 'chat_intro' || STATE.screen === 'chat_loop') {
+        // If we were in intro, we are now in the loop (processing answer to first question)
         STATE.screen = 'chat_loop';
-        // Fall through to process the answer
-    }
 
-    if (STATE.screen === 'chat_loop') {
-        // Collect data
+        // Collect data from the answer
         STATE.user.answers_log.push(text);
-        STATE.user.extracted_tags = [...STATE.user.extracted_tags, ...extractKeywords(text)];
+        const newTags = extractKeywords(text);
+        STATE.user.extracted_tags = [...STATE.user.extracted_tags, ...newTags];
 
+        // Increment to next question
         STATE.chat_turn++;
+
         if (STATE.chat_turn >= CHAT_QUESTIONS.length) {
             finishChat();
         } else {
-            // Little feedback before next question
             const encouragements = ["Super !", "Intéressant.", "Je vois.", "C'est noté !", "Top !"];
             const randEnc = encouragements[Math.floor(Math.random() * encouragements.length)];
-
             botReply(`${randEnc} ${CHAT_QUESTIONS[STATE.chat_turn]}`, 1000);
         }
         return;
     }
-
-    // 4. RESULTS ACTIONS
-    if (STATE.screen === 'results') {
-        if (text === "RESTART") {
-            location.reload();
-            return;
-        }
-        if (text === "MORE") {
-            botReply("Kpékpé sera bientôt disponible sur mobile grâce à ton avis sur le site web ! 📱✨<br><br>Souhaites-tu retourner à l'accueil pour laisser ton avis ?", 1000, [
-                { text: "Donner mon avis", value: "FEEDBACK" },
-                { text: "Recommencer", value: "RESTART" }
-            ]);
-            return;
-        }
-        if (text === "FEEDBACK") {
-            window.location.href = "https://ada-style.github.io/kpekpe_live/index.html#contact";
-            return;
-        }
-        if (text === "PDF") {
-            botReply("La génération PDF est en cours de développement. Cette fonctionnalité sera disponible dans la version finale ! 📄⏳", 800);
-            return;
-        }
-    }
 }
+
 // --- LOGIC FUNCTIONS ---
 function calculateProfile() {
     const scores = STATE.user.personality_scores;
@@ -333,7 +296,7 @@ function extractKeywords(text) {
     if (lower.includes("vêtement") || lower.includes("mode") || lower.includes("couture") || lower.includes("stylis")) tags.push("mode", "vêtement", "couture", "art");
     if (lower.includes("répa") || lower.includes("manuel") || lower.includes("main")) tags.push("manuel", "technique", "réparation");
 
-    // Interests & Togo Specifics
+    // Interests
     if (lower.includes("aide") || lower.includes("social")) tags.push("aider", "social");
     if (lower.includes("voyage") || lower.includes("découv")) tags.push("voyage");
     if (lower.includes("ordi") || lower.includes("code") || lower.includes("info")) tags.push("informatique", "code", "internet");
@@ -361,24 +324,19 @@ function showRecommendations() {
     const scores = JOBS_DATA.map(job => {
         let score = 0;
 
-        // 1. Interest Keywords Match (WEIGHT 15 - Main Driver)
+        // 1. Interest Keywords Match (WEIGHT 80 - Ikigai)
         userTags.forEach(tag => {
-            if (job.tags.some(t => t.toLowerCase() === tag.toLowerCase())) score += 15;
-            else if (job.tags.some(t => t.toLowerCase().includes(tag.toLowerCase()))) score += 7;
+            if (job.tags.some(t => t.toLowerCase() === tag.toLowerCase())) score += 80;
+            // Half points for partial matches
+            else if (job.tags.some(t => t.toLowerCase().includes(tag.toLowerCase()))) score += 40;
         });
 
-        // 2. Personality Match (WEIGHT 5)
-        if (job.profiles.includes(STATE.user.personality_type)) score += 5;
+        // 2. Personality Match (WEIGHT 20 - Secondary)
+        if (job.profiles.includes(STATE.user.personality_type)) score += 20;
 
-        // 3. Series Match (WEIGHT 15 - Career Compatibility)
+        // 3. Series Match (WEIGHT 10 - Contextual)
         const userSeries = STATE.user.series;
-        if (userSeries) {
-            if (job.series.includes("Toutes") || job.series.includes(userSeries)) {
-                score += 15;
-            }
-        } else {
-            score += 5; // Default compatibility
-        }
+        if (userSeries && (job.series.includes("Toutes") || job.series.includes(userSeries))) score += 10;
 
         return { job, score };
     });
@@ -396,12 +354,17 @@ function showRecommendations() {
         const recommendedSchools = getSchoolsForJob(job.tags);
         const schoolText = recommendedSchools.length > 0 ? recommendedSchools.join(", ") : "Universités publiques ou privées du Togo";
 
+        // Logic for Students vs Others
+        const isStudent = (STATE.user.status === "Collégien" || STATE.user.status === "Lycéen");
+        const locationLabel = isStudent ? "Série à suivre" : "Écoles";
+        const locationValue = isStudent ? job.series.join(", ") : schoolText;
+
         html += `
         <div class="job-card">
             <h4>${idx + 1}. ${job.title} (${job.category})</h4>
             <div class="job-details">
                 <p><strong>Pourquoi toi ?</strong> ${job.desc}</p>
-                <p><strong>Écoles :</strong> ${schoolText}</p>
+                <p><strong>${locationLabel} :</strong> ${locationValue}</p>
                 <p><strong>Débouchés :</strong> ${job.recruiters.join(", ")}</p>
                 <div class="job-meta">
                     <span class="badge">Salaire: ${job.salary_indice}</span>

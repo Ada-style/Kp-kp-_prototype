@@ -1,11 +1,11 @@
-# Kpékpé - Prototype Interactif (Web App) 🇹🇬
+# Kpékpé - Prototype Standalone (Focus Chatbot) 🇹🇬
 
 ![Kpékpé Logo](assets/img/kpekpe_logo_placeholder.png)
 
-> **"Light on your way"** - L'assistant d'orientation intelligent pour la jeunesse togolaise.
+> **"Light on your way"** - Le prototype interactif de l'assistant d'orientation intelligent.
 
-Ce dépôt contient le code source du **Prototype Interactif de Kpékpé**.
-Il s'agit d'une **Web App (HTML/CSS/JS)** légère et rapide, conçue pour aider les élèves et étudiants togolais à trouver leur voie grâce à une conversation naturelle.
+Ce dépôt est une version **autonome et allégée** de Kpékpé, focalisée sur l'expérience du chatbot et de l'algorithme d'orientation.
+
 
 🔗 **Démo en direct :** [Lien vers votre déploiement (ex: GitHub Pages)]
 

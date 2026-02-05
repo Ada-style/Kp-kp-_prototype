@@ -1,9 +1,9 @@
 /**
  * Kpékpé Data Source - 100% Togo Context
- * Mises à jour avec les données réelles fournies (Février 2026)
+ * Mises à jour avec les données réelles fournies (Janvier 2026)
  */
 
-// 1. Profils de Personnalité
+// 1. Profils de Personnalité (Inchangé pour l'instant, logique interne)
 const PERSONALITY_PROFILES = {
     ANALYTIQUE: {
         label: "Analytique & Logique",
@@ -27,30 +27,42 @@ const PERSONALITY_PROFILES = {
     }
 };
 
-// 2. Séries disponibles au lycée au Togo (2025-2026)
+// 2. Séries du BAC Togolais (Enrichies)
 const SERIES_DATA = {
-    "générales": [
-        { code: "A4", nom: "Lettres et Sciences Sociales", matieres: ["Français", "Philosophie", "Histoire-Géographie", "Anglais"] },
-        { code: "C", nom: "Sciences Mathématiques", matieres: ["Mathématiques", "PCT"] },
-        { code: "D", nom: "Sciences de la Nature", matieres: ["SVT", "PCT", "Mathématiques"] }
-    ],
-    "techniques_industrielles": [
-        { code: "E", nom: "Mathématiques et Techniques", matieres: ["Mathématiques", "Technologie", "Physique"] },
-        { code: "F1", nom: "Construction Mécanique", matieres: ["Technologie", "Mécanique", "Mathématiques"] },
-        { code: "F2", nom: "Électronique", matieres: ["Technologie", "Électronique", "Mathématiques"] },
-        { code: "F3", nom: "Électrotechnique", matieres: ["Technologie", "Électricité", "Mathématiques"] },
-        { code: "F4", nom: "Génie Civil", matieres: ["Technologie", "Dessin technique", "Mathématiques"] },
-        { code: "TI", nom: "Chaudronnerie, Tuyauterie, Soudure", matieres: ["Technologie", "Soudure", "Mécanique"] }
-    ],
-    "techniques_tertiaires": [
-        { code: "G1", nom: "Techniques Administratives et Secrétariat", matieres: ["Français", "Économie", "Gestion", "Informatique"] },
-        { code: "G2", nom: "Techniques Quantitatives de Gestion", matieres: ["Mathématiques", "Économie", "Comptabilité"] },
-        { code: "G3", nom: "Techniques Commerciales et Marketing", matieres: ["Économie", "Français", "Anglais", "Gestion"] }
-    ]
+    "C": {
+        name: "Série C (Mathématiques & Physique)",
+        desc: "La voie royale pour les sciences dures et l'ingénierie.",
+        keywords: ["maths", "logique", "ingénieur", "informatique", "physique", "architecture"]
+    },
+    "D": {
+        name: "Série D (Sciences de la Vie)",
+        desc: "Idéal pour la santé, l'agriculture et la biologie.",
+        keywords: ["biologie", "santé", "médecine", "pharmacie", "svt", "nature", "agriculture"]
+    },
+    "A4": {
+        name: "Série A4 (Littéraire)",
+        desc: "Pour les passionnés de lettres, langues, droit et communication.",
+        keywords: ["littérature", "langues", "philosophie", "droit", "communication", "journalisme", "enseignement"]
+    },
+    "E": {
+        name: "Série E (Maths & Techno)",
+        desc: "L'excellence technique et mathématique.",
+        keywords: ["technologie", "mécanique", "conception", "ingénierie", "informatique"]
+    },
+    "F1": { name: "F1 (Mécanique Générale)", keywords: ["mécanique", "industrie", "usine", "construction"] },
+    "F2": { name: "F2 (Électronique)", keywords: ["électronique", "circuits", "réparation", "informatique"] },
+    "F3": { name: "F3 (Électrotechnique)", keywords: ["électricité", "énergie", "installation", "bâtiment"] },
+    "F4": { name: "F4 (Génie Civil)", keywords: ["bâtiment", "construction", "architecture", "dessin", "chantier"] },
+    "G1": { name: "G1 (Administration)", keywords: ["administration", "bureau", "secrétariat"] },
+    "G2": { name: "G2 (Gestion/Compta)", keywords: ["comptabilité", "gestion", "chiffres", "banque", "finance"] },
+    "G3": { name: "G3 (Commerce)", keywords: ["commerce", "vente", "marketing", "logistique"] },
+    "TI": { name: "TI (Info)", keywords: ["informatique", "ordinateur", "réseaux", "programmation"] }
 };
 
 // 3. Établissements (Liste étendue et consolidée)
+// Note: Coûts retirés sur demande utilisateur pour prototype
 const SCHOOLS_DB = [
+    // PUBLICS
     { name: "Université de Lomé (UL)", type: "Public", ville: "Lomé", domaines: ["Santé", "Sciences", "Droit", "Économie", "Ingénierie", "Agronomie", "Lettres"] },
     { name: "Université de Kara (UK)", type: "Public", ville: "Kara", domaines: ["Santé", "Droit", "Gestion", "Lettres"] },
     { name: "ENS Atakpamé", type: "Public", ville: "Atakpamé", domaines: ["Enseignement", "Éducation"] },
@@ -58,8 +70,13 @@ const SCHOOLS_DB = [
     { name: "ENSI (UL)", type: "Public", ville: "Lomé", domaines: ["Ingénierie", "Informatique", "Génie Civil"] },
     { name: "FSS (UL)", type: "Public", ville: "Lomé", domaines: ["Santé", "Médecine", "Pharmacie"] },
     { name: "EAMAU", type: "Inter-États", ville: "Lomé", domaines: ["Architecture", "Urbanisme"] },
+
+    // PRIVÉS (Sélection représentative)
     { name: "UCAO-UUT", type: "Privé", ville: "Lomé", domaines: ["Droit", "Communication", "Gestion", "Informatique"] },
+    { name: "Lomé Business School (LBS)", type: "Privé", ville: "Lomé", domaines: ["Management", "Audit", "Marketing"] },
     { name: "ESGIS", type: "Privé", ville: "Lomé", domaines: ["Informatique", "Gestion", "Sciences"] },
+    { name: "IAEC", type: "Privé", ville: "Lomé", domaines: ["Administration", "Commerce"] },
+    { name: "ESA", type: "Privé", ville: "Lomé", domaines: ["Affaires", "Comptabilité"] },
     { name: "IPNET", type: "Privé", ville: "Lomé", domaines: ["Informatique", "Technologie"] },
     { name: "FORMATEC", type: "Privé", ville: "Lomé", domaines: ["Santé", "BTP", "Technique"] },
     { name: "CFMI", type: "Partenariat", ville: "Lomé", domaines: ["Industrie", "Mécanique"] },
@@ -68,22 +85,33 @@ const SCHOOLS_DB = [
 
 // Helper pour trouver des écoles par domaine
 function getSchoolsForJob(jobTags) {
+    // Simple matching heuristic
     const matches = new Set();
     const tags = jobTags.map(t => t.toLowerCase());
+
     SCHOOLS_DB.forEach(school => {
         const schoolDomains = school.domaines.map(d => d.toLowerCase());
-        const hasMatch = tags.some(tag => schoolDomains.some(domain => domain.includes(tag) || tag.includes(domain)));
+        // Check intersection
+        const hasMatch = tags.some(tag =>
+            schoolDomains.some(domain => domain.includes(tag) || tag.includes(domain))
+        );
+
         if (hasMatch) matches.add(school.name);
     });
+
+    // Fallback defaults if empty based on generic types
     if (matches.size === 0) {
         if (tags.includes("santé")) matches.add("Université de Lomé (FSS)");
         if (tags.includes("informatique")) matches.add("IPNET / ESGIS");
         if (tags.includes("commerce")) matches.add("Lomé Business School");
     }
-    return Array.from(matches).slice(0, 3);
+
+    return Array.from(matches).slice(0, 3); // Return top 3 unique
 }
 
+
 // 4. Base de Données Métiers Enrichie (50 Métiers)
+// Structure adaptée pour l'app
 const JOBS_DATA = [
     // --- SANTÉ (8) ---
     { id: "medecin", title: "Médecin Généraliste", category: "Santé", tags: ["santé", "soin", "biologie", "sciences", "aider", "médecine"], profiles: ["ANALYTIQUE", "SOCIAL"], series: ["D", "C"], studies: "7-8 ans", recruiters: ["CHU", "Cliniques"], desc: "Diagnostic et soin des patients.", salary_indice: "Élevé" },
@@ -140,10 +168,28 @@ const JOBS_DATA = [
     { id: "logisticien", title: "Logisticien", category: "Transport", tags: ["port", "marchandise", "organisation", "voyage", "géographie"], profiles: ["METHODIQUE", "ANALYTIQUE"], series: ["G3", "C"], studies: "3 ans", recruiters: ["PAL", "AGL"], desc: "Gestion des flux.", salary_indice: "Moyen à Élevé" },
     { id: "enseignant", title: "Enseignant", category: "Éducation", tags: ["école", "transmettre", "aider", "savoir", "social", "histoire", "géographie"], profiles: ["SOCIAL", "METHODIQUE"], series: ["Toutes"], studies: "3-5 ans", recruiters: ["ENS", "Écoles"], desc: "Formation des jeunes.", salary_indice: "Moyen" },
     { id: "rh", title: "Responsable RH", category: "Gestion", tags: ["social", "recrutement", "humain", "entreprise", "aider"], profiles: ["SOCIAL", "METHODIQUE"], series: ["A4", "G1"], studies: "3-5 ans", recruiters: ["Entreprises"], desc: "Gestion du personnel.", salary_indice: "Moyen" },
-    { id: "banquier", title: "Gestionnaire de Compte", category: "Banque", tags: ["argent", "client", "banque", "finance", "confiance"], profiles: ["SOCIAL", "METHODIQUE"], series: ["G2", "C", "A4"], studies: "3 ans", recruiters: ["Banques"], desc: "Conseils financiers clients.", salary_indice: "Moyen" },
+    { id: "banquier", title: "Gestionnaire de Compte", category: "Banque", tags: ["argent", "client", "banque", "finance", "confiance"], profiles: ["SOCIAL", "METHODIQUE"], series: ["G2", "C", "A4"], studies: "3 ans", recruiters: ["Banques (Orabank)"], desc: "Conseils financiers clients.", salary_indice: "Moyen" },
     { id: "cm", title: "Community Manager", category: "Média", tags: ["internet", "communication", "réseaux sociaux", "web", "image"], profiles: ["CREATIF", "SOCIAL"], series: ["A4", "G3"], studies: "2 ans", recruiters: ["Agences", "PME"], desc: "Gestion de l'image web.", salary_indice: "Moyen" },
     { id: "assurance", title: "Assureur", category: "Finance", tags: ["protection", "sécurité", "client", "négociation", "argent"], profiles: ["METHODIQUE", "SOCIAL"], series: ["G3", "A4"], studies: "3 ans", recruiters: ["Assurances"], desc: "Gestion des risques.", salary_indice: "Moyen" },
     { id: "douane", title: "Agent de Douane", category: "Administration", tags: ["port", "loi", "argent", "frontière", "sécurité"], profiles: ["METHODIQUE", "ANALYTIQUE"], series: ["A4", "D", "G2"], studies: "Concours", recruiters: ["État"], desc: "Contrôle des marchandises.", salary_indice: "Moyen" },
     { id: "policier", title: "Policier / Gendarme", category: "Sécurité", tags: ["loi", "protection", "sécurité", "ordre", "aider"], profiles: ["METHODIQUE", "SOCIAL"], series: ["Toutes"], studies: "Concours", recruiters: ["État"], desc: "Maintien de la paix.", salary_indice: "Moyen" },
     { id: "transitaire", title: "Transitaire", category: "Transport", tags: ["port", "documents", "logistique", "commerce", "marchandise"], profiles: ["METHODIQUE", "ANALYTIQUE"], series: ["G3", "G2", "A4"], studies: "2-3 ans", recruiters: ["Sociétés Transit"], desc: "Formalités douanières.", salary_indice: "Moyen" }
 ];
+
+
+// --- LOGIQUE DE MATCHING ---
+// (Récupérée et adaptée pour utiliser les nouvelles données)
+
+function getRecommendedJobs(personalityType, userKeywords) {
+    // 1. Filter by Personality
+    // Boost jobs that match the Personality Type Profile
+
+    // 2. Score by Keywords
+    // Simple occurrence counting
+
+    // NOTE: This logic is executed in chat.js
+    // ensuring data.js stays pure data container if possible
+    // or providing helper functions here.
+
+    return JOBS_DATA.filter(j => true); // Placeholder, logic in chat.js
+}
