@@ -79,6 +79,8 @@ const SCHOOLS_DB = [
     { name: "ESA", type: "Privé", ville: "Lomé", domaines: ["Affaires", "Comptabilité"] },
     { name: "IPNET", type: "Privé", ville: "Lomé", domaines: ["Informatique", "Technologie"] },
     { name: "FORMATEC", type: "Privé", ville: "Lomé", domaines: ["Santé", "BTP", "Technique"] },
+    { name: "ESAMOD", type: "Privé", ville: "Lomé", domaines: ["Mode", "Stylisme", "Couture"] },
+    { name: "Tahiti Style", type: "Privé", ville: "Lomé", domaines: ["Mode", "Stylisme", "Couture"] },
     { name: "CFMI", type: "Partenariat", ville: "Lomé", domaines: ["Industrie", "Mécanique"] },
     { name: "IFAD", type: "Public/Privé", ville: "Divers", domaines: ["Bâtiment", "Aquaculture", "Élevage"] }
 ];
@@ -136,7 +138,7 @@ const JOBS_DATA = [
     { id: "journaliste", title: "Journaliste / Reporter", category: "Média", tags: ["parler", "écriture", "reportage", "voyage", "géographie", "histoire"], profiles: ["CREATIF", "SOCIAL"], series: ["A4", "G"], studies: "3 ans", recruiters: ["TV", "Radio", "Web"], desc: "Informer le public.", salary_indice: "Moyen" },
     { id: "acteur", title: "Acteur / Comédien", category: "Arts", tags: ["spectacle", "théâtre", "cinéma", "expression", "art"], profiles: ["CREATIF", "SOCIAL"], series: ["Toutes"], studies: "École d'art", recruiters: ["Compagnies", "Freelance"], desc: "Interprétation de rôles.", salary_indice: "Variable" },
     { id: "realisateur", title: "Réalisateur / Monteur", category: "Arts", tags: ["cinéma", "vidéo", "image", "reportage", "technique"], profiles: ["CREATIF", "ANALYTIQUE"], series: ["A4", "F", "TI"], studies: "2-3 ans", recruiters: ["Studios", "Freelance"], desc: "Création de contenus audiovisuels.", salary_indice: "Moyen" },
-    { id: "styliste", title: "Styliste / Designer Mode", category: "Arts", tags: ["mode", "vêtement", "dessin", "création", "art"], profiles: ["CREATIF", "METHODIQUE"], series: ["Toutes"], studies: "École de mode", recruiters: ["Ateliers", "Marques"], desc: "Création de collections de mode.", salary_indice: "Variable" },
+    { id: "styliste", title: "Styliste / Designer Mode", category: "Arts", tags: ["mode", "vêtement", "dessin", "création", "art", "couture", "stylisme", "court"], profiles: ["CREATIF", "METHODIQUE"], series: ["Toutes"], studies: "École de mode (2-3 ans)", recruiters: ["Ateliers", "Marques", "Indépendant"], desc: "Conception et création de collections de mode.", salary_indice: "Variable" },
     { id: "graphiste", title: "Graphiste / UX Designer", category: "Numérique", tags: ["dessin", "ordinateur", "image", "création", "art"], profiles: ["CREATIF", "METHODIQUE"], series: ["Toutes"], studies: "2 ans", recruiters: ["Agences", "Startups"], desc: "Communication visuelle numérique.", salary_indice: "Moyen" },
     { id: "photographe", title: "Photographe Pro", category: "Arts", tags: ["image", "photo", "art", "voyage", "technique"], profiles: ["CREATIF", "SOCIAL"], series: ["Toutes"], studies: "Expérience/Formation", recruiters: ["Studios", "Events"], desc: "Capture d'images.", salary_indice: "Variable" },
     { id: "musicien", title: "Musicien / Producteur", category: "Arts", tags: ["musique", "son", "art", "spectacle", "création"], profiles: ["CREATIF", "SOCIAL"], series: ["Toutes"], studies: "Conservatoire/Pro", recruiters: ["Freelance"], desc: "Création et production musicale.", salary_indice: "Variable" },

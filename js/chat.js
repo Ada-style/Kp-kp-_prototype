@@ -152,6 +152,13 @@ document.getElementById('user-input').addEventListener('keypress', (e) => {
 // --- MAIN CONTROLLER ---
 function handleUserResponse(text) {
     if (!text) return;
+
+    // Detect if text is a URL (for quick replies like "Donner mon avis")
+    if (text.startsWith('http')) {
+        window.open(text, '_blank');
+        return; // Don't add URL as a user message
+    }
+
     addMessage('user', text);
 
     // 1. ONBOARDING
@@ -352,15 +359,18 @@ function extractKeywords(text) {
     // Crafts & Manual
     if (lower.includes("cuisine") || lower.includes("manger") || lower.includes("plat")) tags.push("cuisine", "nourriture");
     if (lower.includes("bois") || lower.includes("menuis")) tags.push("bois", "menuiserie", "manuel");
-    if (lower.includes("vêtement") || lower.includes("mode") || lower.includes("couture") || lower.includes("stylis")) tags.push("mode", "vêtement", "couture", "art");
+    if (lower.includes("vêtement") || lower.includes("mode") || lower.includes("couture") || lower.includes("stylis") || lower.includes("dessin")) tags.push("mode", "vêtement", "couture", "art", "stylisme");
     if (lower.includes("répa") || lower.includes("manuel") || lower.includes("main")) tags.push("manuel", "technique", "réparation");
 
-    // Interests
+    // Interests & Speed
     if (lower.includes("aide") || lower.includes("social")) tags.push("aider", "social");
     if (lower.includes("voyage") || lower.includes("découv")) tags.push("voyage");
     if (lower.includes("ordi") || lower.includes("code") || lower.includes("info")) tags.push("informatique", "code", "internet");
     if (lower.includes("climat") || lower.includes("météo")) tags.push("climat", "météo", "environnement");
     if (lower.includes("reportage") || lower.includes("info")) tags.push("reportage", "communication");
+
+    // Quick entry to workforce
+    if (lower.includes("vite") || lower.includes("rapide") || lower.includes("court") || lower.includes("immédiat")) tags.push("court");
 
     return [...new Set(tags)]; // Unique tags
 }
@@ -392,12 +402,17 @@ function showRecommendations() {
             // At least one match gives the bulk of the score
             ikigaiScore = 80;
             // Bonus for multiple matches (up to 10 extra points)
-            ikigaiScore += Math.min(10, matchCount * 2);
+            ikigaiScore += Math.min(10, matchCount * 5); // Increased weight per match
         }
 
         // 2. Personality (WEIGHT 20)
         if (job.profiles.includes(STATE.user.personality_type)) {
             personalityScore = 20;
+        }
+
+        // 3. Speed Bonus (If user wants short studies)
+        if (userTags.includes("court") && job.tags.includes("court")) {
+            ikigaiScore += 15; // Extra boost for short paths
         }
 
         return { job, score: ikigaiScore + personalityScore };
