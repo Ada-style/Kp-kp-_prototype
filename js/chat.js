@@ -327,29 +327,32 @@ function finishChat() {
 }
 
 function showRecommendations() {
-    // SCORING ALGORITHM
-    const profile = PERSONALITY_PROFILES[STATE.user.personality_type];
     const userTags = STATE.user.extracted_tags;
 
     // Score each job
     const scores = JOBS_DATA.map(job => {
-        let score = 0;
+        let ikigaiScore = 0;
+        let personalityScore = 0;
 
-        // 1. Interest Keywords Match (WEIGHT 80 - Ikigai)
-        userTags.forEach(tag => {
-            if (job.tags.some(t => t.toLowerCase() === tag.toLowerCase())) score += 80;
-            // Half points for partial matches
-            else if (job.tags.some(t => t.toLowerCase().includes(tag.toLowerCase()))) score += 40;
-        });
+        // 1. Ikigai (WEIGHT 80)
+        // Check if ANY user tag matches ANY job tag
+        const matchCount = userTags.filter(tag =>
+            job.tags.some(t => t.toLowerCase() === tag.toLowerCase())
+        ).length;
 
-        // 2. Personality Match (WEIGHT 20 - Secondary)
-        if (job.profiles.includes(STATE.user.personality_type)) score += 20;
+        if (matchCount > 0) {
+            // At least one match gives the bulk of the score
+            ikigaiScore = 80;
+            // Bonus for multiple matches (up to 10 extra points)
+            ikigaiScore += Math.min(10, matchCount * 2);
+        }
 
-        // 3. Series Match (WEIGHT 10 - Contextual)
-        const userSeries = STATE.user.series;
-        if (userSeries && (job.series.includes("Toutes") || job.series.includes(userSeries))) score += 10;
+        // 2. Personality (WEIGHT 20)
+        if (job.profiles.includes(STATE.user.personality_type)) {
+            personalityScore = 20;
+        }
 
-        return { job, score };
+        return { job, score: ikigaiScore + personalityScore };
     });
 
     // Sort and take Top 3
@@ -361,21 +364,25 @@ function showRecommendations() {
 
     top3.forEach((item, idx) => {
         const job = item.job;
-        // Lookup schools dynamically
-        const recommendedSchools = getSchoolsForJob(job.tags);
-        const schoolText = recommendedSchools.length > 0 ? recommendedSchools.join(", ") : "Universités publiques ou privées du Togo";
 
         // Logic for Students vs Others
         const isStudent = (STATE.user.status === "Collégien" || STATE.user.status === "Lycéen");
-        const locationLabel = isStudent ? "Série à suivre" : "Écoles";
-        const locationValue = isStudent ? job.series.join(", ") : schoolText;
+
+        let pathDetails = "";
+        if (isStudent) {
+            pathDetails = `<p><strong>Série à suivre :</strong> ${job.series.join(", ")}</p>`;
+        } else {
+            const recommendedSchools = getSchoolsForJob(job.tags);
+            const schoolText = recommendedSchools.length > 0 ? recommendedSchools.join(", ") : "Universités publiques ou privées du Togo";
+            pathDetails = `<p><strong>Écoles recommandées :</strong> ${schoolText}</p>`;
+        }
 
         html += `
         <div class="job-card">
             <h4>${idx + 1}. ${job.title} (${job.category})</h4>
             <div class="job-details">
                 <p><strong>Pourquoi toi ?</strong> ${job.desc}</p>
-                <p><strong>${locationLabel} :</strong> ${locationValue}</p>
+                ${pathDetails}
                 <p><strong>Débouchés :</strong> ${job.recruiters.join(", ")}</p>
                 <div class="job-meta">
                     <span class="badge">Salaire: ${job.salary_indice}</span>
